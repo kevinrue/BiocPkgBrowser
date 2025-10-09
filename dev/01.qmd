@@ -22,6 +22,10 @@ pkg_list$biocViews[[1]]
 
 ## Getting sub-terms for a biocViews
 
+While it might be nice to ask the reverse question
+"If a package is annotated to XXX, which parent terms is it part of?",
+this allows users to search for all packages under a certain parent term.
+
 Note that only one term can be queried at a time.
 
 The function doesn't crash if more than one is given, but only the first term is processed correctly,
@@ -32,3 +36,4 @@ library(biocViews)
 data(biocViewsVocab)
 biocViews::getSubTerms(dag = biocViewsVocab, term = c("Sequencing"))
 ```
+
