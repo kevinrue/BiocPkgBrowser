@@ -30,5 +30,5 @@ while all other query terms are simply concacenated to the output without search
 ```{r}
 library(biocViews)
 data(biocViewsVocab)
-biocViews::getSubTerms(dag = biocViewsVocab, term = c("Sequencing", "Microarray"))
+biocViews::getSubTerms(dag = biocViewsVocab, term = c("Sequencing"))
 ```
