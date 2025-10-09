@@ -1,0 +1,34 @@
+---
+title: "Experimentation"
+format: html
+---
+
+## Getting data
+
+```{r}
+pkg_list <- BiocPkgTools::biocPkgList()
+pkg_list
+```
+
+## biocViews for one package
+
+The `biocViews` column contains the vector of biocViews for each package.
+
+Example below for the first package in the table:
+
+```{r}
+pkg_list$biocViews[[1]]
+```
+
+## Getting sub-terms for a biocViews
+
+Note that only one term can be queried at a time.
+
+The function doesn't crash if more than one is given, but only the first term is processed correctly,
+while all other query terms are simply concacenated to the output without searching for their sub-terms.
+
+```{r}
+library(biocViews)
+data(biocViewsVocab)
+biocViews::getSubTerms(dag = biocViewsVocab, term = c("Sequencing", "Microarray"))
+```
