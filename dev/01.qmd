@@ -3,6 +3,12 @@ title: "Experimentation"
 format: html
 ---
 
+```{r}
+library(BiocPkgTools)
+library(biocViews)
+data(biocViewsVocab)
+```
+
 ## Getting data
 
 ```{r}
@@ -32,8 +38,27 @@ The function doesn't crash if more than one is given, but only the first term is
 while all other query terms are simply concacenated to the output without searching for their sub-terms.
 
 ```{r}
-library(biocViews)
-data(biocViewsVocab)
-biocViews::getSubTerms(dag = biocViewsVocab, term = c("Sequencing"))
+biocViews::getSubTerms(dag = biocViewsVocab, term = "Sequencing")
+```
+
+## Getting packages associated with a term
+
+(or one of its child terms)
+
+```{r}
+# input
+query_term <- "Sequencing"
+# code
+x_terms <- biocViews::getSubTerms(dag = biocViewsVocab, term = query_term)
+which_pkgs <- vapply(
+  X = pkg_list$biocViews,
+  FUN = function(pkg_terms, query_terms) {
+    any(pkg_terms %in% query_terms)
+  },
+  FUN.VALUE = logical(1),
+  query_terms = x_terms
+)
+res_pkg_names <- pkg_list$Package[which_pkgs]
+str(res_pkg_names)
 ```
 
