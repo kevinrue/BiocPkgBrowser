@@ -16,9 +16,7 @@ server <- function(input, output) {
   )
   
   observeEvent(input$query_biocviews, {
-    print("input$query_biocviews")
     query_terms <- input$query_biocviews
-    print(query_terms)
     if (is.null(query_terms)) {
       return(pkg_list[numeric(0), 1:2])
     }
@@ -33,15 +31,8 @@ server <- function(input, output) {
   })
   
   output$filtered_pkg_list <- renderTable({
-    print("output$filtered_pkg_list")
-    # query_terms <- input$query_biocviews
-    # print(query_terms)
-    # if (is.null(query_terms)) {
-    #   return(pkg_list[numeric(0), 1:2])
-    # }
-    # keep_rows <- which_multiple_terms(query_terms, pkg_list, biocViewsVocab)
-    # NOTE: columns that contain lists break the tableOutput
     keep_rows <- which(pkg_list$Package %in% rv$selected_pkg_names)
+    # NOTE: columns that contain lists break the tableOutput
     return(pkg_list[keep_rows, 1:2, drop = FALSE])
   })
 }
