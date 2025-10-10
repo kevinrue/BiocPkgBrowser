@@ -11,14 +11,37 @@ source("ui.R")
 pkg_list <- BiocPkgTools::biocPkgList()
 
 server <- function(input, output) {
-  output$filtered_pkg_list <- renderTable({
+  rv <- reactiveValues(
+    selected_pkg_names = character(0)
+  )
+  
+  observeEvent(input$query_biocviews, {
+    print("input$query_biocviews")
     query_terms <- input$query_biocviews
     print(query_terms)
     if (is.null(query_terms)) {
       return(pkg_list[numeric(0), 1:2])
     }
     keep_rows <- which_multiple_terms(query_terms, pkg_list, biocViewsVocab)
+    selected_pkg_names <- pkg_list[keep_rows, "Package", drop = TRUE]
+    print(selected_pkg_names)
+    rv$selected_pkg_names <- selected_pkg_names
+  })
+  
+  output$filtered_pkg_summary <- renderText({
+    sprintf("%s packages selected", format(length(rv$selected_pkg_names), big.mark = ","))
+  })
+  
+  output$filtered_pkg_list <- renderTable({
+    print("output$filtered_pkg_list")
+    # query_terms <- input$query_biocviews
+    # print(query_terms)
+    # if (is.null(query_terms)) {
+    #   return(pkg_list[numeric(0), 1:2])
+    # }
+    # keep_rows <- which_multiple_terms(query_terms, pkg_list, biocViewsVocab)
     # NOTE: columns that contain lists break the tableOutput
+    keep_rows <- which(pkg_list$Package %in% rv$selected_pkg_names)
     return(pkg_list[keep_rows, 1:2, drop = FALSE])
   })
 }

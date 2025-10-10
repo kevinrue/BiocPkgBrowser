@@ -6,6 +6,7 @@ ui <- dashboardPage(
   dashboardSidebar(),
   dashboardBody(
     selectizeInput(inputId = "query_biocviews", label = "Query", choices = sort(biocViewsVocab@nodes), selected = NULL, multiple = TRUE),
+    textOutput(outputId = "filtered_pkg_summary"),
     tableOutput(outputId = "filtered_pkg_list")
   )
 )
