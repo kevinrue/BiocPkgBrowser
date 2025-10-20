@@ -12,8 +12,27 @@ pkg_list <- BiocPkgTools::biocPkgList()
 
 server <- function(input, output) {
   rv <- reactiveValues(
+    ui_body_choice = "other",
     selected_pkg_names = character(0)
   )
+  
+  observeEvent(input[["get_packages_by_view"]], {
+    rv$ui_body_choice <- "get_packages_by_view"
+  })
+  
+  observeEvent(input[["get_similar_packages"]], {
+    rv$ui_body_choice <- "get_similar_packages"
+  })
+  
+  output$ui_body <- renderUI({
+    if (rv$ui_body_choice == "get_packages_by_view") {
+      ui_get_packages_by_view
+    } else if (rv$ui_body_choice == "get_similar_packages") {
+      ui_get_similar_packages
+    } else {
+      ui_choose_task
+    }
+  })
   
   observeEvent(input$query_biocviews, {
     query_terms <- input$query_biocviews
