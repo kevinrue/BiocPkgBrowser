@@ -11,17 +11,21 @@ source("ui.R")
 pkg_list <- BiocPkgTools::biocPkgList()
 
 server <- function(input, output) {
+  
   rv <- reactiveValues(
-    ui_body_choice = "other",
+    ui_body_choice = "ui_choose_task",
     selected_pkg_names = character(0)
   )
   
-  observeEvent(input[["get_packages_by_view"]], {
-    rv$ui_body_choice <- "get_packages_by_view"
-  })
-  
-  observeEvent(input[["get_similar_packages"]], {
-    rv$ui_body_choice <- "get_similar_packages"
+  # Create observers to navigate to the page for each mode
+  ui_choices <- c(
+    "get_packages_by_view",
+    "get_similar_packages"
+  )
+  lapply(X = ui_choices, FUN = function(ui_choice) {
+    observeEvent(input[[ui_choice]], {
+      rv$ui_body_choice <- ui_choice
+    })
   })
   
   output$ui_body <- renderUI({
@@ -29,7 +33,7 @@ server <- function(input, output) {
       ui_get_packages_by_view
     } else if (rv$ui_body_choice == "get_similar_packages") {
       ui_get_similar_packages
-    } else {
+    } else if (rv$ui_body_choice == "ui_choose_task") {
       ui_choose_task
     }
   })
