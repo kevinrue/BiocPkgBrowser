@@ -1,4 +1,12 @@
 ## app.R ##
+
+if (!requireNamespace("BiocPkgToolsPlus")) {
+  stop(
+    "The package 'BiocPkgToolsPlus' is not installed.",
+    "Use BiocManager::install('kevinrue/BiocPkgToolsPlus') to install it."
+  )
+}
+
 library(shiny)
 library(shinydashboard)
 library(BiocPkgTools)
@@ -11,9 +19,32 @@ source("ui.R")
 pkg_list <- BiocPkgTools::biocPkgList()
 
 server <- function(input, output) {
+  
   rv <- reactiveValues(
+    ui_body_choice = "ui_choose_task",
     selected_pkg_names = character(0)
   )
+  
+  # Create observers to navigate to the page for each mode
+  ui_choices <- c(
+    "get_packages_by_view",
+    "get_similar_packages"
+  )
+  lapply(X = ui_choices, FUN = function(ui_choice) {
+    observeEvent(input[[ui_choice]], {
+      rv$ui_body_choice <- ui_choice
+    })
+  })
+  
+  output$ui_body <- renderUI({
+    if (rv$ui_body_choice == "get_packages_by_view") {
+      ui_get_packages_by_view
+    } else if (rv$ui_body_choice == "get_similar_packages") {
+      ui_get_similar_packages
+    } else if (rv$ui_body_choice == "ui_choose_task") {
+      ui_choose_task
+    }
+  })
   
   observeEvent(input$query_biocviews, {
     query_terms <- input$query_biocviews
