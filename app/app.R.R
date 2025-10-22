@@ -1,6 +1,6 @@
 ## app.R ##
 
-if (!requireNamespace("BiocPkgToolsPlus")) {
+if (!require("BiocPkgToolsPlus")) {
   stop(
     "The package 'BiocPkgToolsPlus' is not installed.",
     "Use BiocManager::install('kevinrue/BiocPkgToolsPlus') to install it."
