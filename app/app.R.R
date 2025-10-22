@@ -1,4 +1,12 @@
 ## app.R ##
+
+if (!requireNamespace("BiocPkgToolsPlus")) {
+  stop(
+    "The package 'BiocPkgToolsPlus' is not installed.",
+    "Use BiocManager::install('kevinrue/BiocPkgToolsPlus') to install it."
+  )
+}
+
 library(shiny)
 library(shinydashboard)
 library(BiocPkgTools)
