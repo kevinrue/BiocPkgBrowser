@@ -51,14 +51,12 @@ server <- function(input, output) {
     if (is.null(query_terms)) {
       return(pkg_list[numeric(0), 1:2])
     }
-    keep_rows <- which_multiple_terms(query_terms, pkg_list, biocViewsVocab)
-    selected_pkg_names <- pkg_list[keep_rows, "Package", drop = TRUE]
-    print(selected_pkg_names)
+    selected_pkg_names <- get_packages_by_views(input$query_biocviews)
     rv$selected_pkg_names <- selected_pkg_names
   })
   
   output$filtered_pkg_summary <- renderText({
-    sprintf("%s packages selected", format(length(rv$selected_pkg_names), big.mark = ","))
+    sprintf("%s packages found", format(length(rv$selected_pkg_names), big.mark = ","))
   })
   
   output$filtered_pkg_list <- renderTable({
